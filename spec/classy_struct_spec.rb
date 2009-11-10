@@ -48,12 +48,46 @@ describe ClassyStruct do
     end
   end
 
-  describe :initialize do
-    it 'initializes attributes with a hash provided' do
-      o = @foo_struct.new(:foo => :bar, 'baz' => :xyzzy)
+  describe ClassyStruct::ClassyStructClass do
+    describe :child_node do
+      it 'creates a child node whose class is a ClassyStructClass' do
+        o = @foo_struct.new
 
-      o.foo.should == :bar
-      o.baz.should == :xyzzy
+        o.node_class(:bar).ancestors.should include(ClassyStruct::ClassyStructClass)
+      end
+
+      it 'creates child nodes whose class is the same regardless of the instance' do
+        klazz1 = @foo_struct.new.node_class(:bar)
+        klazz2 = @foo_struct.new.node_class(:bar)
+
+        klazz1.should == klazz2
+      end
+    end
+
+    describe :initialize do
+      it 'initializes attributes with a hash provided' do
+        o = @foo_struct.new(:foo => :bar, 'baz' => :xyzzy)
+
+        o.foo.should == :bar
+        o.baz.should == :xyzzy
+      end
+
+      it 'initializes sub-hashes by creating new ClassyStruct child nodes' do
+        o = @foo_struct.new(:foo => :bar, 'baz' => {:xyzzy => 'something', 'thud' => 'splat'})
+
+        o.foo.should == :bar
+        o.baz.should_not be_a(Hash)
+        o.baz.xyzzy.should == 'something'
+        o.baz.thud.should == 'splat'
+      end
+
+      it 'creates persistent ClassyStructClass objects for child nodes' do
+        o = @foo_struct.new(:foo => :bar, 'baz' => {:xyzzy => 'something', 'thud' => 'splat'})
+        p = @foo_struct.new(:foo => :bar, 'baz' => {:xyzzy => 'something', 'thud' => 'splat'})
+
+        o.class.should     == p.class
+        o.baz.class.should == p.baz.class
+      end
     end
   end
 end

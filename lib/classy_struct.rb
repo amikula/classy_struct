@@ -5,7 +5,20 @@ class ClassyStruct
 
   class ClassyStructClass
     def initialize(hash=hil)
-      hash.each{|k,v| send("#{k}=", v)} if hash
+      if hash
+        hash.each_pair do |k,v|
+          if v.is_a?(Hash)
+            v = node_class(k).new(v)
+          end
+
+          send("#{k}=", v)
+        end
+      end
+    end
+
+    def node_class(name)
+      @@__node_classes ||= {}
+      @@__node_classes[name.to_sym] ||= ClassyStruct.new
     end
 
     def method_missing(name, *args)
