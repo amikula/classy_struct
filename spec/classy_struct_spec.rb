@@ -1,18 +1,18 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Airystruct do
+describe ClassyStruct do
   before :each do
-    @foo_struct = Airystruct.new
-    @bar_struct = Airystruct.new
+    @foo_struct = ClassyStruct.new
+    @bar_struct = ClassyStruct.new
   end
 
   describe :new do
-    it "returns something that is not an Airystruct" do
-      Airystruct.new.should_not be_an(Airystruct)
+    it "returns something that is not a ClassyStruct" do
+      ClassyStruct.new.should_not be_a(ClassyStruct)
     end
 
-    it "returns something that inherits from AirystructClass" do
-      Airystruct.new.ancestors.should include(Airystruct::AirystructClass)
+    it "returns something that inherits from ClassyStruct" do
+      ClassyStruct.new.ancestors.should include(ClassyStruct::ClassyStructClass)
     end
   end
 

@@ -1,9 +1,9 @@
-class Airystruct
+class ClassyStruct
   def self.new
-    Class.new(AirystructClass)
+    Class.new(ClassyStructClass)
   end
 
-  class AirystructClass
+  class ClassyStructClass
     def initialize(hash=hil)
       hash.each{|k,v| send("#{k}=", v)} if hash
     end
