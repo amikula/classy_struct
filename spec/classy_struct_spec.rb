@@ -94,5 +94,19 @@ describe ClassyStruct do
         o.baz.class.should == p.baz.class
       end
     end
+
+    describe :new_child do
+      it 'returns a new child node whose class is the node_class for the provided key' do
+        o = @foo_struct.new
+
+        o.new_child(:foo).class.should == @foo_struct.node_class(:foo)
+      end
+
+      it 'assigns the attribute provided with the new child node' do
+        o = @foo_struct.new
+
+        o.new_child(:foo).should == o.foo
+      end
+    end
   end
 end

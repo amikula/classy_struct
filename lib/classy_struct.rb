@@ -21,6 +21,10 @@ class ClassyStruct
       @__node_classes[name.to_sym] ||= ClassyStruct.new
     end
 
+    def new_child(key)
+      self.send("#{key}=", self.class.node_class(key).new)
+    end
+
     def method_missing(name, *args)
       base = (name.to_s =~ /=$/) ? name.to_s[0..-2] : name
 
