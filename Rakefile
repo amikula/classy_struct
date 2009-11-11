@@ -4,11 +4,11 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "airystruct"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.name = "classy_struct"
+    gem.summary = %Q{A better-performing alternative to OpenStruct}
+    gem.description = %Q{A better-performing alternative to OpenStruct}
     gem.email = "amikula@gmail.com"
-    gem.homepage = "http://github.com/amikula/airystruct"
+    gem.homepage = "http://github.com/amikula/classy_struct"
     gem.authors = ["amikula"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -39,7 +39,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "airystruct #{version}"
+  rdoc.title = "classy_struct #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
