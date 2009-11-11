@@ -51,16 +51,21 @@ describe ClassyStruct do
   describe ClassyStruct::ClassyStructClass do
     describe :child_node do
       it 'creates a child node whose class is a ClassyStructClass' do
-        o = @foo_struct.new
-
-        o.node_class(:bar).ancestors.should include(ClassyStruct::ClassyStructClass)
+        @foo_struct.node_class(:bar).ancestors.should include(ClassyStruct::ClassyStructClass)
       end
 
       it 'creates child nodes whose class is the same regardless of the instance' do
-        klazz1 = @foo_struct.new.node_class(:bar)
-        klazz2 = @foo_struct.new.node_class(:bar)
+        klazz1 = @foo_struct.node_class(:bar)
+        klazz2 = @foo_struct.node_class(:bar)
 
         klazz1.should == klazz2
+      end
+
+      it 'creates child nodes whose class is different for different ClassyStruct instances' do
+        klazz1 = @foo_struct.node_class(:bar)
+        klazz2 = @bar_struct.node_class(:bar)
+
+        klazz1.should_not == klazz2
       end
     end
 
