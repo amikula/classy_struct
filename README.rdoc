@@ -1,4 +1,4 @@
-= airystruct
+= classy_struct
 
 Description goes here.
 
