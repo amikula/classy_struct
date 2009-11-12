@@ -9,6 +9,8 @@ class ClassyStruct
         hash.each_pair do |k,v|
           if v.is_a?(Hash)
             v = self.class.node_class(k).new(v)
+          elsif v.is_a?(Array)
+            v = ClassyStructClass.map_array(k, v)
           end
 
           send("#{k}=", v)
@@ -19,6 +21,19 @@ class ClassyStruct
     def self.node_class(name)
       @__node_classes ||= {}
       @__node_classes[name.to_sym] ||= ClassyStruct.new
+    end
+
+    def self.map_array(key, ary)
+      klass = node_class(key)
+
+      ary.map do |e|
+        case e
+        when Hash
+          klass.new(e)
+        else
+          e
+        end
+      end
     end
 
     def new_child(key)

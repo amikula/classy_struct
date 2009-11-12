@@ -93,6 +93,19 @@ describe ClassyStruct do
         o.class.should     == p.class
         o.baz.class.should == p.baz.class
       end
+
+      it 'converts arrays' do
+        o = @foo_struct.new(:foo => [{:bar => :baz}, {:bar => :xyzzy}, {:bar => :thud}])
+
+        o.foo.collect{|f| f.bar}.should == [:baz, :xyzzy, :thud]
+      end
+
+      it 'uses the same class for each converted hash member of arrays' do
+        o = @foo_struct.new(:foo => [{:bar => :baz}, {:bar => :xyzzy}, {:bar => :thud}])
+
+        o.foo[0].class.should == o.foo[1].class
+        o.foo[0].class.should == o.foo[2].class
+      end
     end
 
     describe :new_child do
