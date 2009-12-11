@@ -46,11 +46,11 @@ describe ClassyStruct do
 
       o.bar = :baz
 
-      o.methods.should include('bar')
-      o.class.instance_methods.should include('bar')
+      o.methods.map { |m| m.to_s }.should include('bar')
+      o.class.instance_methods.map { |m| m.to_s }.should include('bar')
 
       p = @foo_struct.new
-      p.methods.should include('bar')
+      p.methods.map { |m| m.to_s }.should include('bar')
 
       p.should_not_receive(:method_missing)
       p.bar
@@ -60,8 +60,8 @@ describe ClassyStruct do
       o = @foo_struct.new
       o.bar = :baz
 
-      @foo_struct.instance_methods.should include('bar')
-      @bar_struct.instance_methods.should_not include('bar')
+      @foo_struct.instance_methods.map { |m| m.to_s }.should include('bar')
+      @bar_struct.instance_methods.map { |m| m.to_s }.should_not include('bar')
     end
   end
 
