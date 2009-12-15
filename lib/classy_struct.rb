@@ -6,7 +6,7 @@ class ClassyStruct
   end
 
   class ClassyStructClass
-    def initialize(hash=hil)
+    def initialize(hash=nil)
       if hash
         hash.each_pair do |k,v|
           k = self.class.method_mapper.call(k.to_s) if self.class.method_mapper
