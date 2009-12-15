@@ -2,6 +2,7 @@ class ClassyStruct
   def self.new(&block)
     klass = Class.new(ClassyStructClass)
     klass.method_mapper = block
+    klass.attr_names = []
     klass
   end
 
@@ -24,6 +25,7 @@ class ClassyStruct
 
     class << self
       attr_accessor :method_mapper
+      attr_accessor :attr_names
 
       def node_class(name)
         @__node_classes ||= {}
@@ -42,6 +44,32 @@ class ClassyStruct
       end
     end
 
+    def _attrs
+      self.class.attr_names.inject({}) do |retval, attr_name|
+        retval[attr_name] = send(attr_name)
+        retval
+      end
+    end
+
+    def inspect
+      to_hash.inspect
+    end
+
+    def to_hash
+      retval = _attrs
+
+      retval.each_pair do |key,val|
+        case val
+        when ClassyStruct::ClassyStructClass
+          retval[key] = val.to_hash
+        when Array
+          retval[key] = val.map{|e| e.is_a?(ClassyStruct::ClassyStructClass) ? e.to_hash : e}
+        end
+      end
+
+      retval
+    end
+
     def new_child(key)
       self.send("#{key}=", self.class.node_class(key).new)
     end
@@ -58,6 +86,8 @@ class ClassyStruct
           @#{base} = val
         end
       EOF
+
+      self.class.attr_names << base.to_sym
 
       send(name, *args)
     end

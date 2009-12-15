@@ -63,6 +63,13 @@ describe ClassyStruct do
       @foo_struct.instance_methods.map { |m| m.to_s }.should include('bar')
       @bar_struct.instance_methods.map { |m| m.to_s }.should_not include('bar')
     end
+
+    it 'adds attribute names to attr_names on the base class' do
+      o = @foo_struct.new
+      o.bar = :baz
+
+      @foo_struct.attr_names.should include(:bar)
+    end
   end
 
   describe ClassyStruct::ClassyStructClass do
@@ -176,6 +183,70 @@ describe ClassyStruct do
         o = @foo_struct.new
 
         o.new_child(:foo).should == o.foo
+      end
+    end
+
+    describe :_attrs do
+      it 'returns a hash with all the attribute names and values' do
+        instance = @foo_struct.new(:foo => :bar, :baz => :xyzzy)
+
+        instance._attrs.should == {:foo => :bar, :baz => :xyzzy}
+      end
+
+      it 'returns values which have been overridden since initialization' do
+        instance = @foo_struct.new(:foo => :bar, :baz => :xyzzy)
+        instance.foo = :thud
+
+        instance._attrs.should == {:foo => :thud, :baz => :xyzzy}
+      end
+
+      it 'returns nil for attribute values which have not been assigned for this instance' do
+        instance1 = @foo_struct.new(:foo => :bar, :baz => :xyzzy)
+        instance1.foo = :thud
+
+        instance2 = @foo_struct.new(:fizz => :buzz)
+        instance2._attrs[:fizz].should == :buzz
+
+        instance2._attrs.should have_key(:foo)
+        instance2._attrs[:foo].should be_nil
+
+        instance2._attrs.should have_key(:baz)
+        instance2._attrs[:baz].should be_nil
+      end
+
+      it 'does not convert nested ClassyStruct objects' do
+        instance = @foo_struct.new(:foo => :bar, :baz => {:xyzzy => :thud})
+
+        instance._attrs[:baz].should be_a(ClassyStruct::ClassyStructClass)
+      end
+    end
+
+    describe :to_hash do
+      it 'returns a hash with all the attribute names and values' do
+        instance = @foo_struct.new(:foo => :bar, :baz => :xyzzy)
+
+        instance.to_hash.should == {:foo => :bar, :baz => :xyzzy}
+      end
+
+      it 'recursively converts classy_struct children to hashes' do
+        instance = @foo_struct.new(:foo => :bar, :baz => {:xyzzy => :thud})
+
+        instance.to_hash.should == {:foo => :bar, :baz => {:xyzzy => :thud}}
+      end
+
+      it 'recursively converts classy_struct children in arrays to hashes' do
+        instance = @foo_struct.new(:foo => :bar, :baz => [{:xyzzy => :thud}])
+
+        instance.to_hash.should == {:foo => :bar, :baz => [{:xyzzy => :thud}]}
+      end
+    end
+
+    describe :inspect do
+      it 'returns to_hash.inspect' do
+        instance = @foo_struct.new
+        instance.should_receive(:to_hash).and_return(mock(:inspect => 'inspected!'))
+
+        instance.inspect.should == 'inspected!'
       end
     end
   end
