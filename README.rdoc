@@ -1,9 +1,41 @@
 = classy_struct
 
-Description goes here.
+A better-performing alternative to OpenStruct
+
+== Usage
+
+First, create a class instance of ClassyStruct:
+
+  require 'classy_struct'
+  Widget = ClassyStruct.new
+
+
+Next, create instances of that class the same as you would with any
+other class:
+
+  w1 = Widget.new
+
+
+These instances are open in much the same way that OpenStruct
+instances are open:
+
+  w1.foo = :bar
+  w1.foo  # => :bar
+
+However, generated accessors are applied to the class instance (in
+this case, Widget) instead of the object instance.  This means that
+accessors only need to be generated once for the class, and instances
+of that class get the accessors automatically.
+
+You can also pass a Hash to the constructor, to be recursively
+converted to ClassyStruct objects:
+
+  w1 = Widget.new(:foo => :bar, :baz => {:xyzzy => :thud})
+  w1.foo        # => :bar
+  w1.baz.xyzzy  # => :thud
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
@@ -15,4 +47,4 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2009 amikula. See LICENSE for details.
+Copyright (c) 2009 Alf Mikula. See LICENSE for details.
