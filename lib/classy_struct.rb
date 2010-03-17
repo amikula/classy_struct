@@ -77,15 +77,7 @@ class ClassyStruct
     def method_missing(name, *args)
       base = (name.to_s =~ /=$/) ? name.to_s[0..-2] : name
 
-      self.class.class_eval <<-EOF
-        def #{base}
-          @#{base}
-        end
-
-        def #{base}=(val)
-          @#{base} = val
-        end
-      EOF
+      self.class.class_eval "attr_accessor :#{base}"
 
       self.class.attr_names << base.to_sym
 
